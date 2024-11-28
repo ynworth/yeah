@@ -1,0 +1,248 @@
+:root {
+    --game_size_x: 9;
+    --game_mines: 0.25
+}
+
+/* .left-page {
+    
+}
+
+.right-page {
+    
+} */
+
+.btnClosed:disabled {
+    background-size: cover;
+    background-color: white;
+}
+
+h1 {
+    text-align: center;
+    font-size: 3rem;
+    margin: 0.5rem auto 0.5rem auto;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: rgb(93, 96, 186);
+    text-shadow: 3px 3px 0px #020202;
+    line-height: 1;
+}
+
+
+h2 {
+    text-align: center;
+    font-weight: lighter;
+    font-size: 1rem;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: rgb(202, 202, 202);
+    text-shadow: 3px 3px 0px #020202;
+    margin: 0.5rem auto 1rem auto;
+}
+
+.arrows {
+    font-size: 3rem;
+    text-shadow: 3px 3px 0px #020202;
+    margin: 0.5rem auto 0.1rem auto;
+    padding: auto;
+    width: 90%;
+    max-width: 500px;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 2rem;
+}
+
+
+.left-page {
+    text-decoration: none;
+    color:rgb(93, 96, 186);
+    margin: auto 1rem auto 1rem;
+}
+
+.right-page {
+    text-decoration: none;
+    color:rgb(93, 96, 186);
+    margin: auto 1rem auto 1rem;
+}
+
+/* @media (max-width: 768px) {
+    .btn {
+        width: 40px;
+        height: 40px;
+        background-size: 40px;
+    }
+} */
+
+.phone-container {
+    overflow: auto;
+    max-width: 100%;
+    max-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    touch-action: pan-x pan-y;
+}
+
+.hey {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 100%;
+    max-width: 190px;
+    height: 140px;
+    margin: auto;
+}
+
+#swag-button {
+    align-items: center;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    max-height: 50px;
+}
+
+#swaggiest {
+    width: 120px;
+    height: 50px;
+    min-height: 40px;
+}
+
+label {
+    font-size: 25;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color:white;
+    -webkit-text-stroke-color: rgb(14, 14, 14);
+    text-shadow: 3px 3px 0px #020202;
+}
+
+
+input {
+    width: 80px;
+}
+
+body {
+    margin: auto;
+    padding: auto;
+    image-rendering: pixelated;
+    background-image: url(https://media1.tenor.com/m/uLYv3MFt2HwAAAAd/rat-dancing-rat.gif);
+    background-size: cover;
+    background-color: rgba(46, 46, 46, 0.89);
+    background-blend-mode: darken;
+    /* 
+    background-blend-mode: luminosity; sad ;(
+    background-blend-mode: difference; ghost mode
+    background-blend-mode: unset; original mode
+    background-blend-mode: screen; heaven mode
+    background-blend-mode: color-burn; halloween ghost mode
+
+    background-image: url(https://media1.tenor.com/m/mwXBI6CY9l8AAAAd/cat-shocked.gif); cat monster death demon miauuuuuuuuuuuuuu
+    background-image: url(https://media1.tenor.com/m/vnX2IhoPSpEAAAAd/orange-cat-staring-orange-cat.gif); orange derp cat
+    background-image: url(https://media1.tenor.com/m/7s58v4kuJGgAAAAd/dog-has-more-drip.gif); dog got more drip than you
+    background-image: url(https://media1.tenor.com/m/SsXEN-yHFqgAAAAd/exploding-car-explode.gif); cat go boom miauuuuuuuuu
+    background-image: url(https://media1.tenor.com/m/OUehVPHGpQ8AAAAd/cat-cat-lick.gif); cat lick
+    background-image: url(https://media1.tenor.com/m/8vW9OKnEBdoAAAAd/michael-pipe-bomb.gif); pipe bomb mailbox miau
+    background-image: url(https://media1.tenor.com/m/uLYv3MFt2HwAAAAd/rat-dancing-rat.gif); jiggle rat
+    */
+
+}
+
+#animatedText {
+    font-size: 20px;
+    opacity: 0;
+    transition: font-size 1s ease, opacity 1s ease;
+    text-align: center;
+    color: black;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    user-select: none;
+}
+
+input {
+    justify-content: center;
+    margin-bottom: 50px;
+}
+
+.btn {
+    background-image: url('./tile_unclicked.png');
+    background-size: 40px;
+    border: none;
+    width: 40px;
+    height: 40px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(var(--game_size_x), 40px);
+    gap: 0px;
+    justify-content: center;
+}
+
+.flag {
+    background-image: url('./flag.png');
+    background-size: cover;
+    background-size: 40px;
+    background-position: center;
+}
+
+.boom {
+    background-image: url('./mine.png');
+    background-size: 40px;
+    background-position: center;
+}
+
+.empty {
+    background-image: url('./tile_disabled.png');
+}
+.one {
+    background-image: url('./1.png'), url('./tile_disabled.png');
+    background-size: 40px, 40px;
+    background-position: center;
+}
+.two {
+    background-image: url('./2.png'), url('./tile_disabled.png');
+    background-size: 40px;
+    background-position: center;
+}
+.three {
+    background-image: url('./3.png'), url('./tile_disabled.png');
+    background-size: 40px;
+    background-position: center;
+}
+.four {
+    background-image: url('./4.png'), url('./tile_disabled.png');
+    background-size: 40px;
+    background-position: center;
+}
+.five {
+    background-image: url('./5.png'), url('./tile_disabled.png');
+    background-size: 40px;
+    background-position: center;
+}
+.six {
+    background-image: url('./6.png'), url('./tile_disabled.png');
+    background-size: 40px;
+    background-position: center;
+}
+.seven {
+    background-image: url('./7.png'), url('./tile_disabled.png');
+    background-size: 40px;
+    background-position: center;
+}
+.eight {
+    background-image: url('./8.png'), url('./tile_disabled.png');
+    background-size: 40px;
+    background-position: center;
+}
+
+.clicked {
+    background-image: url('./tile_clicked.png');
+    background-size: cover;
+    border: none;
+}
+
+/* 
+.new {
+}
+ */
