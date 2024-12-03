@@ -288,3 +288,6 @@ function gameLoop() {
 }
 setInterval(gameLoop, 100);
 
+console.log('hi');
+
+console.log('bye');
