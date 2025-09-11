@@ -8,6 +8,7 @@ let currentClicked = null;
 let flagStartCell = null;
 let firstClick = true;
 
+const audio = new Audio('./swag.mp3');
 
 function updateSize() {
     const swag = document.getElementById('swag').value;
@@ -28,6 +29,9 @@ document.getElementById('swagger').addEventListener('input', (bomb) => {
 });
 
 document.getElementById('swaggiest').addEventListener('mousedown', (event) => {
+    audio.pause();
+    audio.currentTime = 0;
+    audio.play();
     animateText();
     firstClick = true;
     resetGame();

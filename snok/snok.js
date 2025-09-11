@@ -60,7 +60,7 @@ function die(){
         invincibility--
     }else{
         gameOver = true
-        alert("game over");
+        
         setTimeout(1000);
         location.reload();
     }
