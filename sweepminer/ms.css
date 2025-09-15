@@ -4,9 +4,6 @@
     --game_mines: 0.25
 }
 
-body{
-    background-image: url("https://media1.tenor.com/m/uLYv3MFt2HwAAAAd/rat-dancing-rat.gif");
-}
 
 .navbutton{
   background-color: var(--main-color);

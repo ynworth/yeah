@@ -2,12 +2,6 @@
   --main-color: rgb(209, 209, 209);
 }
 
-
-body{
-    background-image: url("https://media1.tenor.com/m/ROCX1i8hrDQAAAAd/credit-card-swipe.gif");
-    
-}
-
 .navbutton{
   background-color: var(--main-color);
 }

@@ -2,10 +2,6 @@
   --main-color: rgb(130, 224, 120);
 }
 
-body{
-    background-image: url("https://media1.tenor.com/m/IbV52JKof8QAAAAd/funny-slide.gif");
-}
-
 .navbutton{
   background-color: var(--main-color);
 }

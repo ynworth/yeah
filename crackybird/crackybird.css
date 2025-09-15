@@ -2,12 +2,6 @@
   --main-color: rgb(228, 201, 106);
 }
 
-
-body{
-    background-image: url("https://media1.tenor.com/m/MbQMYpdJfoEAAAAd/parrot-playful.gif");
-    
-}
-
 .navbutton{
   background-color: var(--main-color);
 }

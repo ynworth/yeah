@@ -1,0 +1,13 @@
+:root {
+  --main-color: rgb(204, 80, 241);
+}
+
+.navbutton{
+  background-color: var(--main-color);
+}
+#canvas{
+  background-color: rgb(15, 15, 15);
+}
+.game-title{
+    color: var(--main-color);
+}
