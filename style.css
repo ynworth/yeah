@@ -49,6 +49,9 @@ body{
   .game3{
     background-image: url('https://media1.tenor.com/m/B3tlzsgy7FsAAAAd/tennis-tennis-ball.gif');
   }
+  .credit{
+    background-image: url('https://media1.tenor.com/m/ROCX1i8hrDQAAAAd/credit-card-swipe.gif');
+  }
 
 main{
     padding: 1rem;
