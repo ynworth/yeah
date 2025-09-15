@@ -1,1 +1,2 @@
-yes, come play on https://ynworth.github.io/snokminer/
+yes, come play on https://ynworth.github.io/yeah/
+
