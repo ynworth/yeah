@@ -1,3 +1,4 @@
+
 let snakeTiles = [ //Pieces of the snok [X,Y],...
     [7, 5],[7, 6],[7, 7]
 ]
@@ -62,7 +63,7 @@ function die(){
         gameOver = true
         
         setTimeout(1000);
-        location.reload();
+        //location.reload();
     }
 }
 
