@@ -1,0 +1,14 @@
+:root {
+  --main-color: rgb(202, 181, 154);
+}
+
+.navbutton{
+  background-color: var(--main-color);
+}
+#canvas{
+  background-image: url("./sprites/background.jpg");
+  background-size: cover;
+}
+.game-title{
+    color: var(--main-color);
+}
