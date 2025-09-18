@@ -63,7 +63,7 @@ function die(){
         gameOver = true
         
         setTimeout(1000);
-        //location.reload();
+        location.reload();
     }
 }
 
@@ -290,5 +290,6 @@ function gameLoop() {
 setInterval(gameLoop, 100);
 
 console.log('hi');
+
 
 console.log('bye');
