@@ -8,6 +8,8 @@ let sounds = {
     jump: new Audio('./audio/jump.mp3'),
     die: new Audio('./audio/death.mp3'),
 }
+let deaths = 0
+let winX = 0
 let currentMusic = "music_pixelpeekerpolka"
 let soundsLoaded = 0;
 const totalSounds = Object.keys(sounds).length;
@@ -39,7 +41,7 @@ function getMousePosition(event) {
 document.addEventListener("mousemove", getMousePosition);
 
 const tileSize = 50
-const tileColor = "#494340ff"
+const tileColor = "#111010ff"
 
 let scene = "menu"
 
@@ -298,6 +300,7 @@ initFuncs.menu = function(){
     createButton("play", vec.new(50, 300), 80, function(){
         changeScene("game")
     })
+    deaths = 0
 }
 
 function playerCollides(){
@@ -359,6 +362,7 @@ renderFuncs.game = function(dt, elapsed){
     ctx.fillText(Math.ceil(score*10)/10, canvas.width/2, 50);
 }
 function die(){
+    deaths ++
     stopSnd(currentMusic)
     console.log("deadass")
     playSnd("die")
@@ -367,6 +371,9 @@ function die(){
 }
 
 tickFuncs.game = function(dt, elapsed){
+    if (plr.pos.x > winX){
+        changeScene("win")
+    }
     if (plr.explodeTime > 0){
         plr.explodeTime -= dt
         if (plr.explodeTime <= 0){
@@ -454,6 +461,7 @@ initFuncs.game = function(){
         ["wall", vec.new(91, 0), vec.new(1, 3)],
         ["wall", vec.new(94, 0), vec.new(1, 4)],
     ]
+    winX = 100*tileSize
     for (let i in level1){
         const obj = level1[i]
         addObj(obj[0], obj[1], obj[2])
@@ -478,21 +486,21 @@ initFuncs.loading = function(){
 
 
 
-renderFuncs.gameover = function(){
+renderFuncs.win = function(){
     ctx.font = "70px cursive";
     ctx.fillStyle = 'black';
 
-    ctx.fillText("game over", 50, 100);
+    ctx.fillText("you won!!!", 50, 100);
 
     ctx.font = "45px cursive";
     ctx.fillStyle = 'yellow';
 
-    ctx.fillText("score: "+score, 50, 160);
+    ctx.fillText("deaths: "+deaths, 50, 160);
 }
-tickFuncs.gameover = function(){
+tickFuncs.win = function(){
     
 }
-initFuncs.gameover = function(){
+initFuncs.win = function(){
     createButton("back!!!!!!!!!!", vec.new(50, 300), 80, function(){
         changeScene("menu")
     })
