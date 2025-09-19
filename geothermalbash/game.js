@@ -5,10 +5,13 @@ const ctx = c.getContext("2d")
 let sounds = {
     music_carefree: new Audio('./audio/music/carefree.mp3'),
     music_pixelpeekerpolka:  new Audio('./audio/music/pixelpeekerpolka.mp3'),
+    music_cipher:  new Audio('./audio/music/cipher.mp3'),
     jump: new Audio('./audio/jump.mp3'),
     die: new Audio('./audio/death.mp3'),
 }
+let unlockedLevels = 5555
 let deaths = 0
+let currentLevel = 0
 let winX = 0
 let currentMusic = "music_pixelpeekerpolka"
 let soundsLoaded = 0;
@@ -297,10 +300,48 @@ tickFuncs.menu = function(dt, elapsed){
 
 }
 initFuncs.menu = function(){
-    createButton("play", vec.new(50, 300), 80, function(){
-        changeScene("game")
-    })
+    let levelMusic = [
+        "music_pixelpeekerpolka",
+        "music_carefree",
+        "music_cipher",
+    ]
+    for (let i in levelMusic){
+        if (unlockedLevels >= i){
+            let next = (Number(i)+1)//why the fuck does i become a string?????????
+            createButton("level "+next, vec.new(canvas.width/2-200, 150+i*90), 80, function(){
+                currentLevel = i
+                currentMusic = levelMusic[i]
+                changeScene("game")
+            })
+        }else{
+            createButton("LOCKED", vec.new(canvas.width/2-200, 150+i*90), 80, function(){
+            })
+        }
+    }
     deaths = 0
+    console.log(unlockedLevels)
+}
+
+renderFuncs.win = function(){
+    ctx.font = "70px cursive";
+    ctx.fillStyle = 'black';
+
+    ctx.fillText("you won!!!", 50, 100);
+
+    ctx.font = "45px cursive";
+    ctx.fillStyle = 'yellow';
+
+    ctx.fillText("deaths: "+deaths, 50, 160);
+}
+tickFuncs.win = function(){
+    
+}
+initFuncs.win = function(){
+    stopSnd(currentMusic)
+    unlockedLevels = Number(currentLevel)+1
+    createButton("back!!!!!!!!!!", vec.new(50, 300), 80, function(){
+        changeScene("menu")
+    })
 }
 
 function playerCollides(){
@@ -316,15 +357,27 @@ function playerCollides(){
 renderFuncs.game = function(dt, elapsed){
     const cam = vec.sub(vec.new(plr.pos.x, canvas.height/2), vec.new(canvas.width/2, canvas.height/2))
 
-    ctx.fillStyle = tileColor
     obstacles.forEach(function(obj){
         if (obj.type == "spike"){
             ctx.drawImage(sprites.spike, obj.pos.x - cam.x -obj.size.x, obj.pos.y - cam.y -obj.size.y, obj.size.x*2, obj.size.y*2)
         }
+        if (obj.type == "launcher"){
+            ctx.fillStyle = "blue"
+            ctx.fillRect(obj.pos.x - cam.x, obj.pos.y - cam.y, obj.size.x, obj.size.y)
+        }
+        if (obj.type == "bouncer"){
+            ctx.beginPath();
+            ctx.arc(obj.pos.x - cam.x +obj.size.x/2, obj.pos.y - cam.y +obj.size.y/2, obj.size.x/2+Math.sin(elapsed*0.02)*2, 0, 2 * Math.PI); // x, y, radius, startAngle, endAngle
+            ctx.fillStyle = 'yellow';
+            ctx.fill();
+            //ctx.drawImage(sprites.player, obj.pos.x - cam.x, obj.pos.y - cam.y, obj.size.x, obj.size.y)
+        }
         if (obj.type == "wall"){
+            ctx.fillStyle = tileColor
             ctx.fillRect(obj.pos.x - cam.x, obj.pos.y - cam.y, obj.size.x, obj.size.y)
         }
     })
+    ctx.fillStyle = tileColor
     ctx.fillRect(0, floorHeight - cam.y, canvas.width, canvas.height)
 
     //ctx.fillRect(plr.pos.x - cam.x, plr.pos.y, plr.size.x, plr.size.y - cam.y)
@@ -370,10 +423,12 @@ function die(){
     //changeScene("game")
 }
 
+function jump(){
+    playSnd("jump")
+    plr.vel.y = -600
+}
+
 tickFuncs.game = function(dt, elapsed){
-    if (plr.pos.x > winX){
-        changeScene("win")
-    }
     if (plr.explodeTime > 0){
         plr.explodeTime -= dt
         if (plr.explodeTime <= 0){
@@ -382,11 +437,14 @@ tickFuncs.game = function(dt, elapsed){
         return
     }
 
+    if (plr.pos.x > winX){
+        changeScene("win")
+    }
+
     plr.vel.y += 2500*dt
 
     if (plr.inputs.jump && plr.grounded){
-        playSnd("jump")
-        plr.vel.y = -600
+        jump()
     }
     if (plr.grounded == false){
         plr.targetDir += dt*350
@@ -397,10 +455,22 @@ tickFuncs.game = function(dt, elapsed){
 
     plr.grounded = false
 
+    obstacles.forEach(function(obj){
+        if (obj.type == "spike" && rectOverlappingRect(plr.pos, plr.size, obj.pos, obj.size)){
+            die()
+            return
+        }
+        if (obj.type == "launcher" && rectOverlappingRect(plr.pos, plr.size, obj.pos, obj.size)){
+            plr.vel.y = -1000
+            return
+        }
+    })
+
     plr.pos.x += plr.vel.x * dt
     const overlapX = playerCollides()
     if (overlapX){
         die()
+        return
     }
     plr.pos.y += plr.vel.y * dt
     const overlapY = playerCollides()
@@ -408,12 +478,6 @@ tickFuncs.game = function(dt, elapsed){
         plr.pos.y += overlapY.y
         plr.vel.y = 0; plr.grounded = true 
     }
-
-    obstacles.forEach(function(obj){
-        if (obj.type == "spike" && rectOverlappingRect(plr.pos, plr.size, obj.pos, obj.size)){
-            die()
-        }
-    })
 
     const yClamped = clamp(plr.pos.y, -canvas.height, floorHeight-plr.size.y)
     if (plr.pos.y != yClamped){ plr.vel.y = 0; plr.grounded = true }
@@ -442,9 +506,9 @@ initFuncs.game = function(){
     })
 
     obstacles = []
-    const level1 = [
+    const levels = [
+        [
         ["wall", vec.new(27, 0), vec.new(18, 1)],
-        
        
         ["spike", vec.new(32+0.5, 1), vec.new(0.5, 0.5)],
         ["spike", vec.new(35+0.5, 1), vec.new(0.5, 0.5)],
@@ -460,10 +524,62 @@ initFuncs.game = function(){
         ["wall", vec.new(88, 0), vec.new(1, 2)],
         ["wall", vec.new(91, 0), vec.new(1, 3)],
         ["wall", vec.new(94, 0), vec.new(1, 4)],
+        ],
+        [
+        ["bouncer", vec.new(22, 1.5), vec.new(1, 1)], 
+       
+        ["spike", vec.new(21+0.5, 0), vec.new(0.5, 0.5)],
+        ["spike", vec.new(22+0.5, 0), vec.new(0.5, 0.5)],
+        ["spike", vec.new(23+0.5, 0), vec.new(0.5, 0.5)],
+
+        ["spike", vec.new(32+0.5, 0), vec.new(0.5, 0.5)],
+
+        ["bouncer", vec.new(42, 1.5), vec.new(1, 1)], 
+        ["wall", vec.new(46, 0), vec.new(2, 2)],
+
+        ["bouncer", vec.new(59, 1.5), vec.new(1, 1)], 
+        ["bouncer", vec.new(63, 2), vec.new(1, 1)], 
+        ["bouncer", vec.new(66, 2), vec.new(1, 1)], 
+
+        ["wall", vec.new(68, 0), vec.new(4, 3)],
+        ["bouncer", vec.new(74, 1.5), vec.new(1, 1)], 
+        ["spike", vec.new(74+0.5, 0), vec.new(0.5, 0.5)],
+        ["wall", vec.new(76, 0), vec.new(3, 3)],
+
+        ["bouncer", vec.new(100, 1), vec.new(1, 1)], 
+        ["wall", vec.new(103, 0), vec.new(20, 2)],
+        ],
+        [
+        ["launcher", vec.new(18, 0), vec.new(1, 0.25)], 
+        ["wall", vec.new(21, 0), vec.new(3, 4)],
+        ["wall", vec.new(27, 0), vec.new(1, 1)],
+        ["launcher", vec.new(27, 1), vec.new(1, 0.25)], 
+        ["wall", vec.new(32, 0), vec.new(7, 3)],
+        ["launcher", vec.new(36, 3), vec.new(1, 0.25)], 
+        ["spike", vec.new(36, 7), vec.new(0.5, 0.5)],
+        ["spike", vec.new(37, 7), vec.new(0.5, 0.5)],
+        ["spike", vec.new(38, 7), vec.new(0.5, 0.5)],
+        ["launcher", vec.new(44, 0), vec.new(1, 0.25)], 
+        ["wall", vec.new(48, 0), vec.new(1, 2)],
+        ["spike", vec.new(48+0.5, 2), vec.new(0.5, 0.5)],
+        ["bouncer", vec.new(48, 3), vec.new(1, 1)], 
+        ["bouncer", vec.new(51.5, 2.5), vec.new(1, 1)], 
+        ["spike", vec.new(53+0.5, 0), vec.new(0.5, 0.5)],
+        ["launcher", vec.new(61, 0), vec.new(1, 0.25)], 
+        ["bouncer", vec.new(62, 3), vec.new(1, 1)], 
+        ["bouncer", vec.new(63, 5), vec.new(1, 1)], 
+        ["wall", vec.new(66, 0), vec.new(7, 6)],
+        ["bouncer", vec.new(76+0.5, 2.5), vec.new(1, 1)], 
+        ["spike", vec.new(78+0.5, 0), vec.new(0.5, 0.5)],
+        ["launcher", vec.new(83+0.5, 0), vec.new(1, 0.25)], 
+        ["wall", vec.new(87, 0), vec.new(25, 4)],
+        ["wall", vec.new(93, 0), vec.new(25, 4)],
+        ],
     ]
-    winX = 100*tileSize
-    for (let i in level1){
-        const obj = level1[i]
+    const level = levels[currentLevel]
+    winX = (level[level.length-1][1].x + 8)*tileSize
+    for (let i in level){
+        const obj = level[i]
         addObj(obj[0], obj[1], obj[2])
     }
     
@@ -484,27 +600,6 @@ initFuncs.loading = function(){
     
 }
 
-
-
-renderFuncs.win = function(){
-    ctx.font = "70px cursive";
-    ctx.fillStyle = 'black';
-
-    ctx.fillText("you won!!!", 50, 100);
-
-    ctx.font = "45px cursive";
-    ctx.fillStyle = 'yellow';
-
-    ctx.fillText("deaths: "+deaths, 50, 160);
-}
-tickFuncs.win = function(){
-    
-}
-initFuncs.win = function(){
-    createButton("back!!!!!!!!!!", vec.new(50, 300), 80, function(){
-        changeScene("menu")
-    })
-}
 
 function pointOverlappingRect(rectPos, rectSize, checkPos){
     if (rectPos.x < checkPos.x && rectPos.x+rectSize.x > checkPos.x){
@@ -529,17 +624,6 @@ document.addEventListener('click', function(event) {
             btn.onClick()
         }
     })
-})
-
-document.addEventListener('mousedown', function(event) {
-    if (scene == "game"){
-        plr.inputs.jump = true
-    }
-})
-document.addEventListener('mouseup', function(event) {
-    if (scene == "game"){
-        plr.inputs.jump = false
-    }
 })
 
 
@@ -581,15 +665,36 @@ function gameLoop(elapsed) {
 
 gameLoop(performance.now())
 
+function attemptJump(){
+    plr.inputs.jump = true
+    obstacles.forEach(function(obj){
+        if (obj.type == "bouncer" && rectOverlappingRect(plr.pos, plr.size, obj.pos, obj.size)){
+            if (obj.used == null){
+                obj.used = true
+                jump()
+            }
+        }
+    })
+}
 
 document.addEventListener("keydown", function(event) {
     if (event.key.toLowerCase() === " ") {
-        plr.inputs.jump = true
+        attemptJump()
+    }
+})
+document.addEventListener("keyup", function(event) {
+    if (event.key.toLowerCase() === " ") {
+        plr.inputs.jump = false
     }
 })
 
-document.addEventListener("keyup", function(event) {
-    if (event.key.toLowerCase() === " ") {
+document.addEventListener('mousedown', function(event) {
+    if (scene == "game"){
+        attemptJump()
+    }
+})
+document.addEventListener('mouseup', function(event) {
+    if (scene == "game"){
         plr.inputs.jump = false
     }
 })
