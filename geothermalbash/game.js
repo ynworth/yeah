@@ -9,7 +9,7 @@ let sounds = {
     jump: new Audio('./audio/jump.mp3'),
     die: new Audio('./audio/death.mp3'),
 }
-let unlockedLevels = 5555
+let unlockedLevels = 1
 let deaths = 0
 let currentLevel = 0
 let winX = 0
