@@ -9,7 +9,8 @@ let sounds = {
     jump: new Audio('./audio/jump.mp3'),
     die: new Audio('./audio/death.mp3'),
 }
-let unlockedLevels = 1
+
+let unlockedLevels = localStorage.getItem("unlockedLevels") || 0
 let deaths = 0
 let currentLevel = 0
 let winX = 0
@@ -338,7 +339,8 @@ tickFuncs.win = function(){
 }
 initFuncs.win = function(){
     stopSnd(currentMusic)
-    unlockedLevels = Number(currentLevel)+1
+    unlockedLevels = Math.max(Number(currentLevel)+1, Number(unlockedLevels))
+    localStorage.setItem("unlockedLevels", unlockedLevels);
     createButton("back!!!!!!!!!!", vec.new(50, 300), 80, function(){
         changeScene("menu")
     })
